@@ -1,0 +1,126 @@
+' Gambas class file
+
+Public Sub Form_Open()
+
+  TextArea1.text = "Elige  en el directorio que esten los años y dentro de ellos debe de haber las carpetas tipo I-XX-XX o M-XX-XX"
+  TextArea1.text &= "\n"
+
+End
+
+Public Sub ButtonProcesar_Click()
+
+  Dim listaCarpetas As String[]
+  Dim listaCarpetaFichas As String[]
+  Dim listafichero As String[]
+
+  Dim CarpetaTmp As String
+  Dim CarpetaFichaTmp As String
+  Dim ficherotmp As String
+  Dim salida As String
+  'leer directorio
+
+  listaCarpetas = Dir(DirBox1.Value, "*", gb.Directory)
+  Application.Busy = 1
+  Print "Lista de Carpetas:"
+  For Each CarpetaTmp In listaCarpetas
+
+    Print CarpetaTmp; " ";
+    TextArea1.text &= CarpetaTmp & " "
+    If IsNumber(CarpetaTmp) Then
+      Print " es una carpeta de año"
+      TextArea1.text &= " es una carpeta de año" & "\n"
+      '-> crear lista de carpetas I-XX-XX o M-XX-XX
+      listaCarpetaFichas = Dir(DirBox1.Value & "/" & CarpetaTmp, "*", gb.Directory)
+
+      '-> dentro de cada  carpeta:
+
+      For Each CarpetaFichaTmp In listaCarpetaFichas
+        '   -> ficheros .png
+        Try Kill "/tmp/01.png"
+        Try Kill "/tmp/01.pdf"
+
+        Try Kill "/tmp/02.png"
+        Try Kill "/tmp/02.pdf"
+        Try Kill "/tmp/03.png"
+        Try Kill "/tmp/03.pdf"
+
+        listafichero = Dir(DirBox1.Value & "/" & CarpetaTmp & "/" & CarpetaFichaTmp, "*", gb.file)
+
+        For Each ficherotmp In listafichero
+          Print "Fichero Analizado:"; CarpetaFichaTmp; "/"; ficherotmp
+
+          '             A-AA-AA_04registro_de_inicio_accion_correctora.png -> 01.pdf
+          If contiene("_04registro_de_inicio_accion_correctora.png", ficherotmp) Then
+
+            Try Copy DirBox1.Value & "/" & CarpetaTmp & "/" & CarpetaFichaTmp & "/" & ficherotmp To "/tmp/01.png"
+            If Error Then
+              Print "Se ha producido un error al intentar copiar archivo:"
+              Print DirBox1.Value & "/" & CarpetaTmp & "/" & CarpetaFichaTmp & "/" & ficherotmp; " a "; "/tmp/01.png"
+            Endif
+            Shell "convert /tmp/01.png /tmp/01.pdf" To salida
+          Endif
+
+          '             A-AA-AA_05registro_de_final_accion_correctora.png -> 02.pdf
+          If contiene("_05registro_de_final_accion_correctora.png", ficherotmp) Then
+
+            Try Copy DirBox1.Value & "/" & CarpetaTmp & "/" & CarpetaFichaTmp & "/" & ficherotmp To "/tmp/02.png"
+            If Error Then
+              TextArea1.text &= "Se ha producido un error al intentar copiar archivo:" & "\n"
+
+              TextArea1.text &= DirBox1.Value & "/" & CarpetaTmp & "/" & CarpetaFichaTmp & "/" & ficherotmp & " a " & "/tmp/02.png" & "\n"
+            Endif
+            Shell "convert /tmp/02.png /tmp/02.pdf" To salida
+          Endif
+
+          '             A-AA-AA_06repfoto.png -> 03.pdf
+          If contiene("_06repfoto.png", ficherotmp) Then
+
+            Try Copy DirBox1.Value & "/" & CarpetaTmp & "/" & CarpetaFichaTmp & "/" & ficherotmp To "/tmp/03.png"
+            If Error Then
+              TextArea1.text &= "Se ha producido un error al intentar copiar archivo:"
+              TextArea1.text &= DirBox1.Value & "/" & CarpetaTmp & "/" & CarpetaFichaTmp & "/" & ficherotmp & " a " & "/tmp/03.png" & "\n"
+            Endif
+
+            Shell "convert /tmp/03.png /tmp/03.pdf" To salida
+          Endif
+
+        Next
+
+        Print "Se esta creando el fichero:"
+        Print " /tmp/Presa_" & ComboBoxPresa.text & "_" & Mid$(CarpetaFichaTmp, 1, 7) & "_" & "InformeRecortado.pdf"
+
+        If Exist("/tmp/03.pdf") Then
+
+          'unir fichero 01.png + 02.png+ 03.png en Presa_A-AA-AA_InformeRecortado.pdf
+          Shell "pdftk /tmp/01.pdf /tmp/02.pdf /tmp/03.pdf cat output /tmp/Presa_" & ComboBoxPresa.text & "_" & Mid$(CarpetaFichaTmp, 1, 7) & "_" & "InformeRecortado.pdf" To salida
+          Print "lleva fotografia"
+        Else
+          Shell "pdftk /tmp/01.pdf /tmp/02.pdf cat output /tmp/Presa_" & ComboBoxPresa.text & "_" & Mid$(CarpetaFichaTmp, 1, 7) & "_" & "InformeRecortado.pdf" To salida
+          Print "no lleva con fotografia"
+        Endif
+
+        Print "Salida: " & salida
+      Next
+
+    Else
+
+      Print " No es una carpeta de año"
+      TextArea1.text &= " No es una carpeta de año" & "\n"
+    Endif
+
+    Print ""
+  Next
+  Application.Busy = 0
+  Message.Info("Fin")
+
+End
+
+Public Function contiene(TituloBuscar As String, contenido As String) As Boolean 'true: titulo a buscar esta dentro de contenido
+
+  If InStr(Upper(contenido), Upper(TituloBuscar)) <> 0 Then
+    Return True 'el fichero contiene el titulo
+  Else
+    Return False
+  Endif
+
+End

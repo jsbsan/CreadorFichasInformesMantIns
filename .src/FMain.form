@@ -1,0 +1,32 @@
+# Gambas Form File 3.0
+
+{ Form Form
+  MoveScaled(0,0,92,67)
+  { DirBox1 DirBox
+    MoveScaled(1,7,87,5)
+    Font = Font["-2"]
+  }
+  { Label1 Label
+    MoveScaled(2,2,48,4)
+    Text = ("Elegir directorio donde estan las fichas:")
+  }
+  { ButtonProcesar Button
+    MoveScaled(17,17,33,5)
+    Text = ("Procesar: Crear informes")
+  }
+  { TextArea1 TextArea
+    MoveScaled(3,35,85,25)
+    Background = &HDFDFDF&
+    ReadOnly = True
+    Wrap = True
+  }
+  { Label2 Label
+    MoveScaled(4,24,17,5)
+    Text = ("Indicar Presa:")
+  }
+  { ComboBoxPresa ComboBox
+    MoveScaled(21,24,24,5)
+    ReadOnly = True
+    List = [("Peñaflor"), ("Puebla_Cazalla"), ("Melonares"), ("Pintado"), ("Huesna"), ("Zufre"), ("Aracena"), ("TorreDelAguila"), ("Agrio")]
+  }
+}
