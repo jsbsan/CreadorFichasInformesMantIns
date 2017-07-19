@@ -17,6 +17,7 @@
   { TextArea1 TextArea
     MoveScaled(3,35,85,25)
     Background = &HDFDFDF&
+    Foreground = Color.Black
     ReadOnly = True
     Wrap = True
   }
