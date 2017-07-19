@@ -44,7 +44,7 @@ Public Sub ButtonProcesar_Click()
         Try Kill "/tmp/03.png"
         Try Kill "/tmp/03.pdf"
 
-        listafichero = Dir(DirBox1.Value & "/" & CarpetaTmp & "/" & CarpetaFichaTmp, "*", gb.file)
+        listafichero = Dir(DirBox1.Value & "/" & CarpetaTmp & "/" & CarpetaFichaTmp, "*.png", gb.file)
 
         For Each ficherotmp In listafichero
           Print "Fichero Analizado:"; CarpetaFichaTmp; "/"; ficherotmp
@@ -92,14 +92,19 @@ Public Sub ButtonProcesar_Click()
         If Exist("/tmp/03.pdf") Then
 
           'unir fichero 01.png + 02.png+ 03.png en Presa_A-AA-AA_InformeRecortado.pdf
-          Shell "pdftk /tmp/01.pdf /tmp/02.pdf /tmp/03.pdf cat output /tmp/Presa_" & ComboBoxPresa.text & "_" & Mid$(CarpetaFichaTmp, 1, 7) & "_" & "InformeRecortado.pdf" To salida
+
+          Print "comando: " & "pdftk /tmp/01.pdf /tmp/02.pdf /tmp/03.pdf cat output /tmp/Presa_" & ComboBoxPresa.text & "_" & Replace(CarpetaFichaTmp, " ", "_") & "_" & "InformeRecortado.pdf"
+
+          Shell "pdftk /tmp/01.pdf /tmp/02.pdf /tmp/03.pdf cat output /tmp/Presa_" & ComboBoxPresa.text & "_" & Replace(CarpetaFichaTmp, " ", "_") & "_" & "InformeRecortado.pdf" Wait
           Print "lleva fotografia"
         Else
-          Shell "pdftk /tmp/01.pdf /tmp/02.pdf cat output /tmp/Presa_" & ComboBoxPresa.text & "_" & Mid$(CarpetaFichaTmp, 1, 7) & "_" & "InformeRecortado.pdf" To salida
+
+          Print "comando: " & "pdftk /tmp/01.pdf /tmp/02.pdf cat output /tmp/Presa_" & ComboBoxPresa.text & "_" & Replace(CarpetaFichaTmp, " ", "_") & "_" & "InformeRecortado.pdf"
+
+          Shell "pdftk /tmp/01.pdf /tmp/02.pdf cat output /tmp/Presa_" & ComboBoxPresa.text & "_" & Replace(CarpetaFichaTmp, " ", "_") & "_" & "InformeRecortado.pdf" Wait
           Print "no lleva con fotografia"
         Endif
 
-        Print "Salida: " & salida
       Next
 
     Else

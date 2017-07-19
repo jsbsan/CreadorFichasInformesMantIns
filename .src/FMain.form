@@ -11,8 +11,9 @@
     Text = ("Elegir directorio donde estan las fichas:")
   }
   { ButtonProcesar Button
-    MoveScaled(17,17,33,5)
+    MoveScaled(28,24,33,5)
     Text = ("Procesar: Crear informes")
+    Picture = Picture["icon:/16/exec"]
   }
   { TextArea1 TextArea
     MoveScaled(3,35,85,25)
@@ -22,11 +23,11 @@
     Wrap = True
   }
   { Label2 Label
-    MoveScaled(4,24,17,5)
+    MoveScaled(3,13,17,5)
     Text = ("Indicar Presa:")
   }
   { ComboBoxPresa ComboBox
-    MoveScaled(21,24,24,5)
+    MoveScaled(20,13,24,5)
     ReadOnly = True
     List = [("Peñaflor"), ("Puebla_Cazalla"), ("Melonares"), ("Pintado"), ("Huesna"), ("Zufre"), ("Aracena"), ("TorreDelAguila"), ("Agrio")]
   }
